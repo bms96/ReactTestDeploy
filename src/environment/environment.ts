@@ -1,2 +1,2 @@
 
-export const baseURL: string = "https://localhost:7298/"; 
+export const baseURL: string = "dot-net-test-web-api.azurewebsites.net"; 
