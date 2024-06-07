@@ -1,2 +1,2 @@
 
-export const baseURL: string = "dot-net-test-web-api.azurewebsites.net"; 
+export const baseURL: string = "https://dot-net-test-web-api.azurewebsites.net/weatherforecast"; 
