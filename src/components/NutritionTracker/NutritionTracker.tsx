@@ -59,9 +59,9 @@ export default function NutritionTracker() {
                     </li>
                 ))}
             </ul>
-            {/* <label> */}
-            <b>Description</b> <input name="description" value={enteredDescription} onChange={e => handleDescriptionChange(e.target.value)} />
-            {/* </label> */}
+            <label>
+                <b>Description</b> <input name="description" value={enteredDescription} onChange={e => handleDescriptionChange(e.target.value)} />
+            </label>
             <br />
             <label>
                 <b>Calories</b> <input name="calories" value={enteredCalories} onChange={e => handleCaloriesChange(e.target.value)} pattern="\d*" />
@@ -72,7 +72,7 @@ export default function NutritionTracker() {
             </label>
             <br />
             <br />
-            <button style={{backgroundColor: "green"}} onClick={() => handleAddEntryClick(enteredDescription, enteredCalories, enteredProtein)}>Add Entry</button>
+            <button style={{ backgroundColor: "green" }} onClick={() => handleAddEntryClick(enteredDescription, enteredCalories, enteredProtein)}>Add Entry</button>
         </>
     );
 
