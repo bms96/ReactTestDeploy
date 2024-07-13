@@ -54,7 +54,7 @@ export default function NutritionTracker() {
                 {nutritionEntries.map((entry, index) => (
                     <li key={index}>
                         <b>Description:</b> {entry.description}, <b>Calories:</b> {entry.calories}, <b>Protein:</b> {entry.protein}
-                        <button style={{ marginLeft: "1rem", backgroundColor: "red" }} onClick={() => handleDeleteEntryClick(entry.id)}>Delete</button>
+                        <button style={{ marginLeft: "1rem"}} onClick={() => handleDeleteEntryClick(entry.id)}>Delete</button>
                         <hr />
                     </li>
                 ))}
@@ -72,7 +72,7 @@ export default function NutritionTracker() {
             </label>
             <br />
             <br />
-            <button style={{ backgroundColor: "green" }} onClick={() => handleAddEntryClick(enteredDescription, enteredCalories, enteredProtein)}>Add Entry</button>
+            <button onClick={() => handleAddEntryClick(enteredDescription, enteredCalories, enteredProtein)}>Add Entry</button>
         </>
     );
 
