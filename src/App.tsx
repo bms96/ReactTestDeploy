@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <h1>Today's Nutrition</h1>
+      <h1>Shitty Nutrition Tracker</h1>
       <NutritionTracker/>
     </>
   )
