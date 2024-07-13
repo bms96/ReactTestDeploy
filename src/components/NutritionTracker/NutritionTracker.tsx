@@ -64,11 +64,11 @@ export default function NutritionTracker() {
             </label>
             <br />
             <label>
-                <b>Calories</b> <input name="calories" value={enteredCalories} onChange={e => handleCaloriesChange(e.target.value)} pattern="\d*" />
+                <b>Calories</b> <input type="number" name="calories" value={enteredCalories} onChange={e => handleCaloriesChange(e.target.value)} />
             </label>
             <br />
             <label>
-                <b>Protein</b> <input name="protein" value={enteredProtein} onChange={e => handleProteinChange(e.target.value)} pattern="\d*" />
+                <b>Protein</b> <input type="number" name="protein" value={enteredProtein} onChange={e => handleProteinChange(e.target.value)} />
             </label>
             <br />
             <br />
