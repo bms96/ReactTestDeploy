@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Button from '@mui/material/Button';
+import BasicEditingGrid from "./GridEditor";
+import { BorderAllRounded, Opacity } from "@mui/icons-material";
 
 interface NutritionEntry {
     id: number
@@ -17,7 +20,7 @@ export default function NutritionTracker() {
     const [enteredCalories, setEnteredCalories] = useState<number>(0);
     const [enteredProtein, setEnteredProtein] = useState<number>(0);
 
-    var inputStyle = {borderRadius: "0.25rem"}
+    var inputStyle = { borderRadius: "0.25rem", borderColor: 'black', height: '1.3rem' }
 
     function handleDescriptionChange(newVal: string) {
         setEnteredDescription(newVal);
@@ -47,6 +50,30 @@ export default function NutritionTracker() {
         localStorage.setItem("entries", JSON.stringify(newEntriesList));
     }
 
+    function handleDuplicateEntryClick(id: number) {
+        const entryToDuplicate: NutritionEntry | undefined = nutritionEntries.find(entry => entry.id == id);
+
+        if (!entryToDuplicate) {
+            console.log(`handleDuplicateEntryClick(id: ${id}) unable to duplicate entry`)
+            return;
+        };
+
+        const newEntry: NutritionEntry = {
+            id: createNewEntryId(),
+            description: entryToDuplicate.description,
+            calories: entryToDuplicate.calories,
+            protein: entryToDuplicate.protein
+        }
+
+        const newEntriesList: NutritionEntry[] = [...nutritionEntries, newEntry];
+        setNutritionEntries(newEntriesList)
+        localStorage.setItem("entries", JSON.stringify(newEntriesList));
+    }
+
+    function createNewEntryId(): number {
+        return nutritionEntries?.length == 0 ? 1 : nutritionEntries[nutritionEntries.length - 1].id + 1;
+    }
+
     function TableSummary() {
         const CALORIES_TO_LOSE_ONE_POUND: number = 1731;
         const CALORIES_TO_LOSE_TWO_POUNDs: number = 1231;
@@ -68,32 +95,120 @@ export default function NutritionTracker() {
         </>
     }
 
+    function DataTable() {
+
+        function handleInputEdit(entry: NutritionEntry) {
+
+            const entryToUpdate: NutritionEntry | undefined = nutritionEntries.find(x => x.id == entry.id);
+
+            if (!entryToUpdate) {
+                console.log(`handleInputEdit(entry)\nentry: \n${JSON.stringify(entry)}\nUnable to update entry`);
+                return;
+            }
+
+            entryToUpdate.description = entry.description;
+            entryToUpdate.calories = entry.calories;
+            entryToUpdate.protein = entry.protein;
+
+            
+
+            // setNutritionEntries(newEntriesList)
+            // localStorage.setItem("entries", JSON.stringify(newEntriesList));
+
+        }
+
+        const rowWidth: string = "4rem"
+        const borderRadius: string = "0.5rem"
+        // Header Styling
+        const headerStyle = { backgroundColor: '#0d0d0c' }
+        const headerTextStyle = {
+            marginLeft: rowWidth,
+            marginRight: rowWidth
+        }
+
+        const headerActionStyle = {
+            marginLeft: rowWidth,
+            marginRight: rowWidth,
+            borderTopRightRadius: borderRadius
+        }
+
+        // Body Styling
+        const tableBodyStyle = {
+            backgroundColor: '#403f3e',
+            borderRadius: borderRadius
+        }
+
+        const tdStyle = {
+            borderRadius: '1rem'
+        }
+
+        const actionButtonStyle = {
+            display: 'flex',
+            gap: '0.5rem',
+            marginRight: '0.5rem'
+        }
+
+        var inputStyle = {
+            borderRadius: "0.25rem",
+            outline: 'none',
+            border: 'none',
+            backgroundColor: 'transparent',
+            textAlign: 'center',
+            height: '1.3rem'
+        }
+
+        return <>
+            <table style={{ borderCollapse: 'collapse', boxShadow: '7px 5px 8px #0d0d0c', opacity: '0.95' }}>
+                <thead style={headerStyle}>
+                    <tr>
+                        <th style={{ marginLeft: '3rem', marginRight: '3rem', borderTopLeftRadius: borderRadius }}><p style={headerTextStyle}>Description</p></th>
+                        <th><p style={headerTextStyle}>Calories</p></th>
+                        <th><p style={headerTextStyle}>Protein</p></th>
+                        <th style={headerActionStyle}><p style={headerTextStyle}>Actions</p></th>
+                    </tr>
+                </thead>
+                <tbody style={tableBodyStyle}>
+                    {nutritionEntries.map((entry, index) => (
+                        <tr key={entry.id} style={{ borderBottom: '1px solid black' }}>
+                            <td><input type="text" style={inputStyle} value={entry.description} onChange={() => handleInputEdit(entry)} /></td>
+                            <td><p>{entry.calories}</p></td>
+                            <td><p>{entry.protein}</p></td>
+                            <td>
+                                <div style={actionButtonStyle}>
+                                    <Button variant="contained" onClick={() => handleDuplicateEntryClick(entry.id)}>Duplicate</Button>
+                                    <Button variant="contained" color="error" onClick={() => handleDeleteEntryClick(entry.id)}>Delete</Button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    }
+
     return (
         <>
             <TableSummary />
-            <label>
-                <b>Description</b> <input style={inputStyle} name="description" value={enteredDescription} onChange={e => handleDescriptionChange(e.target.value)} />
-            </label>
-            <br />
-            <label>
-                <b>Calories</b> <input style={inputStyle} type="number" name="calories" value={enteredCalories} onChange={e => handleCaloriesChange(e.target.value)} />
-            </label>
-            <br />
-            <label>
-                <b>Protein</b> <input style={inputStyle} type="number" name="protein" value={enteredProtein} onChange={e => handleProteinChange(e.target.value)} />
-            </label>
-            <br />
-            <br />
-            <button onClick={() => handleAddEntryClick(enteredDescription, enteredCalories, enteredProtein)}>Add Entry</button>
-            <ul>
-                {nutritionEntries.map((entry, index) => (
-                    <li key={index}>
-                        <b>Description:</b> {entry.description}, <b>Calories:</b> {entry.calories}, <b>Protein:</b> {entry.protein}
-                        <button style={{ marginLeft: "1rem" }} onClick={() => handleDeleteEntryClick(entry.id)}>Delete</button>
-                        <hr />
-                    </li>
-                ))}
-            </ul>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '18rem', margin: 'auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <b>Description</b> <input style={inputStyle} name="description" value={enteredDescription} onChange={e => handleDescriptionChange(e.target.value)} />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <b>Calories</b> <input style={inputStyle} type="number" name="calories" value={enteredCalories} onChange={e => handleCaloriesChange(e.target.value)} />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <b>Protein</b> <input style={inputStyle} type="number" name="protein" value={enteredProtein} onChange={e => handleProteinChange(e.target.value)} />
+                </div>
+            </div>
+
+            <button style={{ marginTop: '1rem' }} onClick={() => handleAddEntryClick(enteredDescription, enteredCalories, enteredProtein)}>Add Entry</button>
+
+            <div style={{ marginTop: '1rem' }}>
+                <DataTable />
+            </div>
+
+
+            {/* <BasicEditingGrid/> */}
         </>
     );
 }
