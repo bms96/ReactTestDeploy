@@ -1,7 +1,5 @@
 import { useState } from "react";
 import Button from '@mui/material/Button';
-import BasicEditingGrid from "./GridEditor";
-import { BorderAllRounded, Opacity } from "@mui/icons-material";
 
 interface NutritionEntry {
     id: number
@@ -138,23 +136,14 @@ export default function NutritionTracker() {
             borderRadius: borderRadius
         }
 
-        const tdStyle = {
-            borderRadius: '1rem'
-        }
+        // const tdStyle = {
+        //     borderRadius: '1rem'
+        // }
 
         const actionButtonStyle = {
             display: 'flex',
             gap: '0.5rem',
             marginRight: '0.5rem'
-        }
-
-        var inputStyle = {
-            borderRadius: "0.25rem",
-            outline: 'none',
-            border: 'none',
-            backgroundColor: 'transparent',
-            textAlign: 'center',
-            height: '1.3rem'
         }
 
         return <>
@@ -168,7 +157,7 @@ export default function NutritionTracker() {
                     </tr>
                 </thead>
                 <tbody style={tableBodyStyle}>
-                    {nutritionEntries.map((entry, index) => (
+                    {nutritionEntries.map((entry) => (
                         <tr key={entry.id} style={{ borderBottom: '1px solid black' }}>
                             <td><input type="text" style={{
                                 borderRadius: "0.25rem",
