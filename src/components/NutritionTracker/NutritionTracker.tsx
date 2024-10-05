@@ -9,7 +9,9 @@ interface NutritionEntry {
 
 export default function NutritionTracker() {
 
-    const [nutritionEntries, setNutritionEntries] = useState<NutritionEntry[]>([]);
+    //localStorage.setItem("testVal", "123");
+    const previousEntries: NutritionEntry[] = JSON.parse(localStorage.getItem("entries") ?? "") ?? [];
+    const [nutritionEntries, setNutritionEntries] = useState<NutritionEntry[]>(previousEntries);
 
     const [enteredDescription, setEnteredDescription] = useState<string>("");
     const [enteredCalories, setEnteredCalories] = useState<number>(0);
@@ -32,11 +34,17 @@ export default function NutritionTracker() {
     function handleAddEntryClick(description: string, calories: number, protein: number) {
         const newId = nutritionEntries?.length == 0 ? 1 : nutritionEntries[nutritionEntries.length - 1].id + 1;
         const newEntry: NutritionEntry = { id: newId, description: description, calories: calories, protein: protein };
-        setNutritionEntries([...nutritionEntries, newEntry]);
+
+        const newEntriesList: NutritionEntry[] = [...nutritionEntries, newEntry];
+
+        setNutritionEntries(newEntriesList);
+        localStorage.setItem("entries", JSON.stringify(newEntriesList));
     }
 
     function handleDeleteEntryClick(id: number) {
-        setNutritionEntries([...nutritionEntries.filter(entry => entry.id != id)])
+        const newEntriesList: NutritionEntry[] = [...nutritionEntries.filter(entry => entry.id != id)];
+        setNutritionEntries(newEntriesList)
+        localStorage.setItem("entries", JSON.stringify(newEntriesList));
     }
 
     function TableSummary() {
@@ -63,15 +71,6 @@ export default function NutritionTracker() {
     return (
         <>
             <TableSummary />
-            <ul>
-                {nutritionEntries.map((entry, index) => (
-                    <li key={index}>
-                        <b>Description:</b> {entry.description}, <b>Calories:</b> {entry.calories}, <b>Protein:</b> {entry.protein}
-                        <button style={{ marginLeft: "1rem" }} onClick={() => handleDeleteEntryClick(entry.id)}>Delete</button>
-                        <hr />
-                    </li>
-                ))}
-            </ul>
             <label>
                 <b>Description</b> <input style={inputStyle} name="description" value={enteredDescription} onChange={e => handleDescriptionChange(e.target.value)} />
             </label>
@@ -86,6 +85,15 @@ export default function NutritionTracker() {
             <br />
             <br />
             <button onClick={() => handleAddEntryClick(enteredDescription, enteredCalories, enteredProtein)}>Add Entry</button>
+            <ul>
+                {nutritionEntries.map((entry, index) => (
+                    <li key={index}>
+                        <b>Description:</b> {entry.description}, <b>Calories:</b> {entry.calories}, <b>Protein:</b> {entry.protein}
+                        <button style={{ marginLeft: "1rem" }} onClick={() => handleDeleteEntryClick(entry.id)}>Delete</button>
+                        <hr />
+                    </li>
+                ))}
+            </ul>
         </>
     );
 }
