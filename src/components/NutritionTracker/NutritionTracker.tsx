@@ -10,8 +10,17 @@ interface NutritionEntry {
 
 export default function NutritionTracker() {
 
-    //localStorage.setItem("testVal", "123");
-    const previousEntries: NutritionEntry[] = JSON.parse(localStorage.getItem("entries") ?? "") ?? [];
+    function getPreviousEntries(): NutritionEntry[] {
+        try {
+            const storedEntries = localStorage.getItem("entries");
+            return storedEntries ? JSON.parse(storedEntries) : [];
+        } catch (error) {
+            console.error("Failed to parse entries from localStorage:", error);
+            return [];
+        }
+    }
+    const previousEntries: NutritionEntry[] = getPreviousEntries();
+
     const [nutritionEntries, setNutritionEntries] = useState<NutritionEntry[]>(previousEntries);
 
     const [enteredDescription, setEnteredDescription] = useState<string>("");
@@ -108,10 +117,10 @@ export default function NutritionTracker() {
             entryToUpdate.calories = entry.calories;
             entryToUpdate.protein = entry.protein;
 
+            const updatedEntry = [...nutritionEntries.map(e => (e.id === entry.id ? entryToUpdate : e))];
 
-
-            // setNutritionEntries(newEntriesList)
-            // localStorage.setItem("entries", JSON.stringify(newEntriesList));
+            setNutritionEntries(updatedEntry)
+            localStorage.setItem("entries", JSON.stringify(updatedEntry));
 
         }
 
