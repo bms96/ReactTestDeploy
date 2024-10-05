@@ -110,7 +110,7 @@ export default function NutritionTracker() {
             entryToUpdate.calories = entry.calories;
             entryToUpdate.protein = entry.protein;
 
-            
+
 
             // setNutritionEntries(newEntriesList)
             // localStorage.setItem("entries", JSON.stringify(newEntriesList));
@@ -170,7 +170,14 @@ export default function NutritionTracker() {
                 <tbody style={tableBodyStyle}>
                     {nutritionEntries.map((entry, index) => (
                         <tr key={entry.id} style={{ borderBottom: '1px solid black' }}>
-                            <td><input type="text" style={inputStyle} value={entry.description} onChange={() => handleInputEdit(entry)} /></td>
+                            <td><input type="text" style={{
+                                borderRadius: "0.25rem",
+                                outline: 'none',
+                                border: 'none',
+                                backgroundColor: 'transparent',
+                                textAlign: 'center',
+                                height: '1.3rem'
+                            }} value={entry.description} onChange={() => handleInputEdit(entry)} /></td>
                             <td><p>{entry.calories}</p></td>
                             <td><p>{entry.protein}</p></td>
                             <td>
