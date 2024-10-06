@@ -104,7 +104,7 @@ export default function NutritionTracker() {
 
     function DataTable() {
 
-        function handleInputEdit(entry: NutritionEntry) {
+        function handleInputEdit(entry: NutritionEntry, newValue: string) {
 
             const entryToUpdate: NutritionEntry | undefined = nutritionEntries.find(x => x.id == entry.id);
 
@@ -113,7 +113,7 @@ export default function NutritionTracker() {
                 return;
             }
 
-            entryToUpdate.description = entry.description;
+            entryToUpdate.description = newValue as string;
             entryToUpdate.calories = entry.calories;
             entryToUpdate.protein = entry.protein;
 
@@ -168,14 +168,16 @@ export default function NutritionTracker() {
                 <tbody style={tableBodyStyle}>
                     {nutritionEntries.map((entry) => (
                         <tr key={entry.id} style={{ borderBottom: '1px solid black' }}>
-                            <td><input type="text" style={{
-                                borderRadius: "0.25rem",
-                                outline: 'none',
-                                border: 'none',
-                                backgroundColor: 'transparent',
-                                textAlign: 'center',
-                                height: '1.3rem'
-                            }} value={entry.description} onChange={() => handleInputEdit(entry)} /></td>
+                            <td>
+                                <input type="text" style={{
+                                    borderRadius: "0.25rem",
+                                    outline: 'none',
+                                    border: 'none',
+                                    backgroundColor: 'transparent',
+                                    textAlign: 'center',
+                                    height: '1.3rem'
+                                }} onChange={(e) => handleInputEdit(entry, e.target.value)} defaultValue={entry.description} />
+                            </td>
                             <td><p>{entry.calories}</p></td>
                             <td><p>{entry.protein}</p></td>
                             <td>
